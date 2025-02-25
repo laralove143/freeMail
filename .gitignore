@@ -1,0 +1,7 @@
+.clasp.json
+.clasprc.json
+.DS_Store
+.vscode
+dist
+node_modules
+tsconfig.tsbuildinfo
