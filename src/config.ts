@@ -7,7 +7,7 @@ const HEADER_CELL_VALUE = {
   templateSubject: "Template Subject",
 };
 
-const CONFIG_SHEET_NAME = "FRee";
+const CONFIG_SHEET_NAME = "FRee Mail";
 const RANGE = {
   email: "A:A",
   header: {
