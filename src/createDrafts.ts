@@ -1,10 +1,4 @@
-/* exported main, Sheet, Spreadsheet */
-
-interface Sheet {
-  readonly getRange: (range: string) => GoogleAppsScript.Spreadsheet.Range;
-}
-
-type Spreadsheet = Readonly<GoogleAppsScript.Spreadsheet.Spreadsheet>;
+/* exported createDrafts */
 
 const getUi = (): GoogleAppsScript.Base.Ui | null => {
   try {
@@ -14,7 +8,7 @@ const getUi = (): GoogleAppsScript.Base.Ui | null => {
   }
 };
 
-const main = (): void => {
+const createDrafts = (): void => {
   const ss = SpreadsheetApp.getActive();
   const ui = getUi();
 

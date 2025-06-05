@@ -39,7 +39,7 @@ const onOpen = (): void => {
 
   ui.createAddonMenu()
     .addItem("Set up spreadsheet", "onInstall")
-    .addItem("Create drafts", "main")
+    .addItem("Create drafts", "createDrafts")
     .addToUi();
 };
 
