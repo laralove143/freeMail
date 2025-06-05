@@ -5,7 +5,9 @@ interface Placeholder {
   readonly values: readonly string[];
 }
 
-const getEmails = (sheet: Sheet): string[] => {
+const getEmails = (
+  sheet: Readonly<GoogleAppsScript.Spreadsheet.Sheet>
+): string[] => {
   const emails = sheet.getRange(RANGE.email).getValues().flat();
 
   if (!emails.every((email) => typeof email === "string")) {
@@ -15,7 +17,9 @@ const getEmails = (sheet: Sheet): string[] => {
   return emails;
 };
 
-const getPlaceholders = (sheet: Sheet): Placeholder[] => {
+const getPlaceholders = (
+  sheet: Readonly<GoogleAppsScript.Spreadsheet.Sheet>
+): Placeholder[] => {
   const err = new Error("Failed to get placeholders.");
 
   const is2DArrayString = (
@@ -79,7 +83,7 @@ const processRow = (params: {
 };
 
 const processSheet = (
-  sheet: Sheet,
+  sheet: Readonly<GoogleAppsScript.Spreadsheet.Sheet>,
   template: string,
   subject: string
 ): void => {

@@ -1,6 +1,10 @@
 /* exported validate */
 
-const validateCellEq = (sheet: Sheet, range: string, text: string): void => {
+const validateCellEq = (
+  sheet: Readonly<GoogleAppsScript.Spreadsheet.Sheet>,
+  range: string,
+  text: string
+): void => {
   const rule = SpreadsheetApp.newDataValidation()
     .requireTextEqualTo(text)
     .setAllowInvalid(false)
@@ -10,7 +14,10 @@ const validateCellEq = (sheet: Sheet, range: string, text: string): void => {
   sheet.getRange(range).setDataValidation(rule);
 };
 
-const validateCellNotEmpty = (sheet: Sheet, range: string): void => {
+const validateCellNotEmpty = (
+  sheet: Readonly<GoogleAppsScript.Spreadsheet.Sheet>,
+  range: string
+): void => {
   const rule = SpreadsheetApp.newDataValidation()
     .requireFormulaSatisfied("=LEN(INDIRECT(ADDRESS(ROW(),COLUMN())))>0")
     .setAllowInvalid(false)
@@ -20,7 +27,10 @@ const validateCellNotEmpty = (sheet: Sheet, range: string): void => {
   sheet.getRange(range).setDataValidation(rule);
 };
 
-const validateEmail = (sheet: Sheet, range: string): void => {
+const validateEmail = (
+  sheet: Readonly<GoogleAppsScript.Spreadsheet.Sheet>,
+  range: string
+): void => {
   const emailRule = SpreadsheetApp.newDataValidation()
     .requireTextIsEmail()
     .setAllowInvalid(false)
@@ -30,7 +40,10 @@ const validateEmail = (sheet: Sheet, range: string): void => {
   sheet.getRange(range).offset(1, 0).setDataValidation(emailRule);
 };
 
-const validatePlaceholderFormat = (sheet: Sheet, range: string): void => {
+const validatePlaceholderFormat = (
+  sheet: Readonly<GoogleAppsScript.Spreadsheet.Sheet>,
+  range: string
+): void => {
   const formula =
     '=AND(LEFT(INDIRECT(ADDRESS(ROW(),COLUMN())),1)="{" , RIGHT(INDIRECT(ADDRESS(ROW(),COLUMN())),1)="}")';
 
@@ -43,10 +56,13 @@ const validatePlaceholderFormat = (sheet: Sheet, range: string): void => {
   sheet.getRange(range).setDataValidation(placeholderRule);
 };
 
-const validateConfig = (ss: Spreadsheet): void => {
+const validateConfig = (
+  ss: Readonly<GoogleAppsScript.Spreadsheet.Spreadsheet>
+): void => {
+  const sheets = ss.getSheets();
+
   if (
-    !ss
-      .getSheets()
+    !sheets
       .map((sheet: Readonly<GoogleAppsScript.Spreadsheet.Sheet>) =>
         sheet.getName()
       )
@@ -55,17 +71,21 @@ const validateConfig = (ss: Spreadsheet): void => {
     throw new Error(`No sheet called ${CONFIG_SHEET_NAME} found!`);
   }
 
-  validateCellEq(
-    ss,
-    RANGE.header.templateSubject,
-    HEADER_CELL_VALUE.templateSubject
-  );
-  validateCellEq(ss, RANGE.header.subject, HEADER_CELL_VALUE.subject);
-  validateCellNotEmpty(ss, RANGE.templateSubject);
-  validateCellNotEmpty(ss, RANGE.subject);
+  for (const sheet of sheets) {
+    validateCellEq(
+      sheet,
+      RANGE.header.templateSubject,
+      HEADER_CELL_VALUE.templateSubject
+    );
+    validateCellEq(sheet, RANGE.header.subject, HEADER_CELL_VALUE.subject);
+    validateCellNotEmpty(sheet, RANGE.templateSubject);
+    validateCellNotEmpty(sheet, RANGE.subject);
+  }
 };
 
-const validate = (ss: Spreadsheet): void => {
+const validate = (
+  ss: Readonly<GoogleAppsScript.Spreadsheet.Spreadsheet>
+): void => {
   validateConfig(ss);
 
   for (const sheet of ss.getSheets()) {

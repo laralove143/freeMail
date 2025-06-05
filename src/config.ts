@@ -1,4 +1,4 @@
-/* exported HEADER_CELL_VALUE, COLOR, getSenderName, getTemplate, getSubject */
+/* exported HEADER_CELL_VALUE, BANDING_THEME, getSenderName, getTemplate, getSubject */
 
 const HEADER_CELL_VALUE = {
   email: "Email",
@@ -9,22 +9,20 @@ const HEADER_CELL_VALUE = {
 
 const CONFIG_SHEET_NAME = "FRee Mail";
 const RANGE = {
-  email: "A:A",
+  email: "A2:A",
   header: {
+    all: "1:1",
     email: "A1",
     placeholder: "B1:Z1",
     subject: `${CONFIG_SHEET_NAME}!B1`,
     templateSubject: `${CONFIG_SHEET_NAME}!A1`,
   },
-  placeholder: "B:Z",
+  placeholder: "B2:Z",
   subject: `${CONFIG_SHEET_NAME}!B2`,
   templateSubject: `${CONFIG_SHEET_NAME}!A2`,
 };
 
-const COLOR = {
-  cell: "#FFC688",
-  header: "#FFB25F",
-};
+const BANDING_THEME = SpreadsheetApp.BandingTheme.GREEN;
 
 const getSenderName = (
   ui: Readonly<GoogleAppsScript.Base.Ui> | null
@@ -42,7 +40,10 @@ const getSenderName = (
   throw new Error("Sender name is required!");
 };
 
-const getTemplate = (ss: Spreadsheet, senderName: string): string => {
+const getTemplate = (
+  ss: Readonly<GoogleAppsScript.Spreadsheet.Spreadsheet>,
+  senderName: string
+): string => {
   const subject = ss.getRange(RANGE.templateSubject).getValue() as unknown;
 
   if (typeof subject !== "string") {
@@ -63,7 +64,9 @@ const getTemplate = (ss: Spreadsheet, senderName: string): string => {
   return body;
 };
 
-const getSubject = (ss: Spreadsheet): string => {
+const getSubject = (
+  ss: Readonly<GoogleAppsScript.Spreadsheet.Spreadsheet>
+): string => {
   const subject = ss.getRange(RANGE.subject).getValue() as unknown;
 
   if (typeof subject !== "string") {
